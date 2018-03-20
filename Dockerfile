@@ -3,11 +3,11 @@ ENV GOBIN=$GOPATH/bin
 COPY . /go
 RUN apk add --no-cache git ca-certificates; \
   go get; \
-  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/balance-exporter \
+  CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/empty \
   -ldflags '-d -s -w' -a -tags netgo -installsuffix netgo
 
 FROM scratch
-COPY --from=builder /go/bin/balance-exporter /
+COPY --from=builder /go/bin/empty /
 COPY --from=builder /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/
-EXPOSE 9913/tcp
-ENTRYPOINT ["/balance-exporter"]
+EXPOSE 8080/tcp
+ENTRYPOINT ["/empty"]
